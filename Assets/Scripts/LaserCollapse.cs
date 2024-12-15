@@ -5,6 +5,8 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class LaserCollapse : MonoBehaviour
 {
+    // 레이저에 충돌 시 큐브 원위치
+
     public Transform cube; // 리셋할 큐브 오브젝트
     private Vector3 initialPosition; // 큐브의 초기 위치
     private Quaternion initialRotation; // 큐브의 초기 회전

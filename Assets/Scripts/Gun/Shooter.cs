@@ -7,12 +7,16 @@ public class Shooter : MonoBehaviour
     public GameObject portalPrefab_1; // 생성할 포탈 프리팹
     public GameObject portalPrefab_2; // 생성할 포탈 프리팹
     public Transform shootPoint; // 레이저 시작 지점
+    public Transform player; // 이동할 플레이어
     public float shootDelay = 0.1f; // 레이저 발사 간격
     public float maxDistance = 100f; // 최대 거리
 
     private GameObject portalA; // 첫 번째 포탈
     private GameObject portalB; // 두 번째 포탈
     private bool isFirstPortal = true; // 첫 번째 포탈을 쏘는지 여부
+
+    public AudioSource shootAudioSource; // 발사 효과음용 AudioSource
+    public AudioClip shootClip; // 발사 소리
 
     private void Start()
     {
@@ -52,6 +56,18 @@ public class Shooter : MonoBehaviour
             Vector3 hitPoint = shootPoint.position + shootPoint.forward * maxDistance;
             CreatePortal(hitPoint, Vector3.up); // 기본 방향으로 포탈 생성
         }
+        PlayShootSound();
+
+        var hitObject = hitInfo.transform.GetComponent<Hittable>();
+        hitObject?.Hit();
+    }
+
+    private void PlayShootSound()
+    {
+        if (shootAudioSource != null && shootClip != null)
+        {
+            shootAudioSource.PlayOneShot(shootClip); // 발사 효과음 재생
+        }
     }
 
     private void CreatePortal(Vector3 position, Vector3 normal)
@@ -82,7 +98,7 @@ public class Shooter : MonoBehaviour
         {
             return portalB.transform.position + portalB.transform.forward;
         }
-        // 현재 위치가 두 번째 포탈 근처라면 첫 번째 포탈 위치 반환
+        // 현재 위치가 두 번째 포탈 근처라면 첫 번째 포탈 위치 반환   
         else if (portalB != null && Vector3.Distance(currentPosition, portalB.transform.position) < 1f && portalA != null)
         {
             return portalA.transform.position + portalA.transform.forward;
